@@ -1,0 +1,5 @@
+Política de transporte:
+Transporte de 5 unidade(s) da origem 1 para o destino 2.
+Transporte de 5 unidade(s) da origem 2 para o destino 3.
+Transporte de 7 unidade(s) da origem 3 para o destino 1.
+Transporte de 3 unidade(s) da origem 3 para o destino 2.
