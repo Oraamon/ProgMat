@@ -65,7 +65,7 @@ def solve_transport_problem(n_sources, n_destinations, supplies, demands, costs)
                 solution_value = x[i, j].solution_value()
                 fractional_part = solution_value - int(solution_value)
 
-                if fractional_part >= 0.1:
+                if fractional_part >= 0.9:
                     amount = math.ceil(solution_value)
                 else:
                     amount = int(solution_value)
