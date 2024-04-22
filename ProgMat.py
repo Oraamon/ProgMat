@@ -31,21 +31,30 @@ def solve_transport_problem(n_sources, n_destinations, supplies, demands, costs)
     solver = pywraplp.Solver.CreateSolver('SCIP')
     x = {}
 
+    # Criar variáveis de decisão
     for i in range(n_sources):
         for j in range(n_destinations):
             x[i, j] = solver.NumVar(0, solver.infinity(), f'x[{i},{j}]')
+            print(f'x[{i},{j}]')
 
     # Restrições de oferta
     for i in range(n_sources):
-        solver.Add(solver.Sum(x[i, j] for j in range(n_destinations)) <= supplies[i])
+        constraint_supply = solver.Constraint(supplies[i], supplies[i], f'Supply_Constraint_{i}')
+        for j in range(n_destinations):
+            constraint_supply.SetCoefficient(x[i, j], 1)
 
     # Restrições de demanda
     for j in range(n_destinations):
-        print(solver.Sum(x[i, j] for i in range(n_sources)) >= demands[j])
-        solver.Add(solver.Sum(x[i, j] for i in range(n_sources)) >= demands[j])
+        constraint_demand = solver.Constraint(demands[j], demands[j], f'Demand_Constraint_{j}')
+        for i in range(n_sources):
+            constraint_demand.SetCoefficient(x[i, j], 1)
 
     # Função objetivo
-    solver.Minimize(solver.Sum(costs[i][j] * x[i, j] for i in range(n_sources) for j in range(n_destinations)))
+    objective = solver.Objective()
+    for i in range(n_sources):
+        for j in range(n_destinations):
+            objective.SetCoefficient(x[i, j], costs[i][j])
+    objective.SetMinimization()
 
     status = solver.Solve()
 
@@ -84,5 +93,4 @@ def main():
     if result:
         write_solution(result, output_filename)
 
-if __name__ == '__main__':
-    main()
+main()
